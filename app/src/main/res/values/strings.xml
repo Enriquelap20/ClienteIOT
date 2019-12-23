@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">ClienteIOT</string>
+    <string name="title_activity_home_screen">HomeScreen</string>
+    <string name="bad_login_msg">Usuario o Clave Incorrectos</string>
+    <string name="login_button">Log In</string>
+    <string name="remember_check">Recuérdame</string>
+    <string name="username_hint">Usuario</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="tcp_button">TCP</string>
+    <string name="udp_button">UDP</string>
+    <string name="clear_button">Borrar</string>
+    <string name="placeholder_client_msg">Escriba aquí</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="bad_ip">Introduzca una dirección IP válida</string>
+    <string name="err_unknownHost">Error de conexión: Host Desconocido</string>
+    <string name="err_connectionTimedOut">Error de conexión: Tiempo agotado</string>
+    <string name="err_unreachableHost">Error de conexión: Host de destino inaccessible</string>
+    <string name="received_msg">Mensaje Recibido!: </string>
+    <string name="welcome_msg">Bienvenido:</string>
+    <string name="preferences_saved">Configuración guardada con exito!</string>
+    <string name="hint_button_savePrefs">Guardar</string>
+    <string name="hint_ipEditText">Dirección IP (Default:192.168.1.16)</string>
+    <string name="hint_portEditText">Puerto (Default:49000)</string>
+    <string name="bad_port"><![CDATA[Por favor use un puerto válido (1024<n<65535)]]></string>
+    <string name="bad_prefs">Por favor chequee sus configuraciones</string>
+</resources>
