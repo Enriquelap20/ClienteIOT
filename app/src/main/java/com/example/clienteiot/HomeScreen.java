@@ -158,6 +158,7 @@ public class HomeScreen extends AppCompatActivity {
                    String sentence = strings[0];
                    sentence = Normalizer.normalize(sentence, Normalizer.Form.NFD);
                    sentence = sentence.replaceAll("[^\\p{ASCII}]", "");
+                   sentence = sentence.trim();
                    sentence = sentence.toUpperCase();
                    Log.e(CLASS_TAG, sentence);
                    String sentenceHash = md5(sentence);
