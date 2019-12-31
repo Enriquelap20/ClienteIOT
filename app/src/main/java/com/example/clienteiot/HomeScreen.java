@@ -28,6 +28,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.Normalizer;
 
 public class HomeScreen extends AppCompatActivity {
     public static String CLASS_TAG=HomeScreen.class.getSimpleName();
@@ -155,6 +156,9 @@ public class HomeScreen extends AppCompatActivity {
            if(identifier==1) {
                 try {
                    String sentence = strings[0];
+                   sentence = Normalizer.normalize(sentence, Normalizer.Form.NFD);
+                   sentence = sentence.replaceAll("[^\\p{ASCII}]", "");
+                   sentence = sentence.toUpperCase();
                    Log.e(CLASS_TAG, sentence);
                    String sentenceHash = md5(sentence);
                    Socket clientSocket = new Socket(ipAddress, port);
