@@ -6,8 +6,8 @@
     <string name="remember_check">Recuérdame</string>
     <string name="username_hint">Usuario</string>
     <string name="password_hint">Contraseña</string>
-    <string name="tcp_button">TCP</string>
-    <string name="udp_button">UDP</string>
+    <string name="tcp_button">ENVIAR</string>
+    <string name="udp_button">VOZ</string>
     <string name="clear_button">Borrar</string>
     <string name="placeholder_client_msg">Escriba aquí</string>
     <string name="title_activity_settings">SettingsActivity</string>

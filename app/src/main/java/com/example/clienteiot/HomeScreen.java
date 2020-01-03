@@ -9,6 +9,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,7 +46,9 @@ public class HomeScreen extends AppCompatActivity {
     public Button clearButton;
     public FloatingActionButton fab;
     public FloatingActionButton settingsButton;
-
+    private final int REQUEST_SPEECH_RECOGNIZER = 3000;
+    private String command;
+    private String question = "¿Qué Desea Hacer?";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +68,7 @@ public class HomeScreen extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Cliente TCP/UDP");
+        getSupportActionBar().setTitle("Cliente IOT");
 
         final PreferencesManager sharedPreferences=new PreferencesManager(getApplicationContext());
 
@@ -85,10 +88,7 @@ public class HomeScreen extends AppCompatActivity {
         udpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                message = clientMsg.getText().toString();
-                new SendMessage(2,ipAddress,port).execute(message);
-                Log.e(CLASS_TAG, ipAddress);
-                Log.e(CLASS_TAG, String.valueOf(port));
+                startSpeechRecognizer();
             }
         });
 
@@ -126,6 +126,7 @@ public class HomeScreen extends AppCompatActivity {
                     }
             }
 
+        startSpeechRecognizer();
     }
 
     class SendMessage extends AsyncTask<String, Void, String> {
@@ -267,6 +268,31 @@ public class HomeScreen extends AppCompatActivity {
             return sb.toString();
         } catch (NoSuchAlgorithmException e) { e.printStackTrace(); }
         return null;
+    }
+
+    private void startSpeechRecognizer() {
+        Intent intent = new Intent
+                (RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,question );
+        startActivityForResult(intent, REQUEST_SPEECH_RECOGNIZER);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_SPEECH_RECOGNIZER) {
+            if (resultCode == RESULT_OK) {
+                String[] results = data.getStringArrayListExtra
+                        (RecognizerIntent.EXTRA_RESULTS).toArray(new String[0]);
+                command = results[0];
+                serverMsg.setText("Dijiste: " +command);
+                new SendMessage(1,ipAddress,port).execute(command);
+            }
+        }
     }
 
 }
