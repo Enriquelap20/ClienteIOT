@@ -336,8 +336,8 @@ public class HomeScreen extends AppCompatActivity {
                     else{
                         commandID="T";
                     }
-                    serverMsg.setText(command+commandID);
                 new SendMessage(1,ipAddress,port, commandID).execute(command);
+                startSpeechRecognizer();
             }
         }
     }
