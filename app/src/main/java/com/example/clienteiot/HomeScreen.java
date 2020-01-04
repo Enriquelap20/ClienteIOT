@@ -36,7 +36,6 @@ public class HomeScreen extends AppCompatActivity {
     public TextView title;
     public Bundle extras;
     String username;
-    String message;
     public String ipAddress;
     public int port;
     public EditText clientMsg;
@@ -298,8 +297,7 @@ public class HomeScreen extends AppCompatActivity {
     private void startSpeechRecognizer() {
         Intent intent = new Intent
                 (RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,question );
         startActivityForResult(intent, REQUEST_SPEECH_RECOGNIZER);
     }
@@ -307,7 +305,7 @@ public class HomeScreen extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String commandID="T";
+        String commandID;
 
         if (requestCode == REQUEST_SPEECH_RECOGNIZER) {
             if (resultCode == RESULT_OK) {
