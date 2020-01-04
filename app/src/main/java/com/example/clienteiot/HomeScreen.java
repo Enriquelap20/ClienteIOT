@@ -78,8 +78,30 @@ public class HomeScreen extends AppCompatActivity {
         tcpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                message = clientMsg.getText().toString();
-                new SendMessage(1,ipAddress,port).execute(message);
+                command = clientMsg.getText().toString();
+                String commandID="T";
+                    if(command.toLowerCase().contains("enciende la")){
+                        command=command.replace("enciende la ","");
+                        commandID="ON";
+                    }
+                    else if(command.toLowerCase().contains("apaga la")){
+                        command=command.replace("apaga la ","");
+                        commandID="OFF";
+                    }
+                    else if(command.toLowerCase().contains("abre la")){
+                        command=command.replace("Abre la ","");
+                        command=command.replace("abre la ","");
+                        commandID="ON";
+                    }
+                    else if(command.toLowerCase().contains("cierra la")){
+                        command=command.replace("Cierra la ","");
+                        command=command.replace("cierra la ","");
+                        commandID="OFF";
+                    }
+                    else{
+                        commandID="T";
+                    }
+                new SendMessage(1,ipAddress,port, commandID).execute(command);
                 Log.e(CLASS_TAG, ipAddress);
                 Log.e(CLASS_TAG, String.valueOf(port));
             }
@@ -133,6 +155,7 @@ public class HomeScreen extends AppCompatActivity {
         private int identifier;
         private String ipAddress;
         private int port;
+        private String commandID;
         public String modifiedSentence="";
         byte[] sendData;
         byte[] receiveData = new byte[1024];
@@ -140,10 +163,11 @@ public class HomeScreen extends AppCompatActivity {
         boolean err_unknownHost=false;
         boolean err_unreachableHost=false;
 
-        public SendMessage(int identifier, String ipAddress, int port) {
+        public SendMessage(int identifier, String ipAddress, int port, String commandID) {
             this.identifier=identifier;
             this.ipAddress=ipAddress;
             this.port=port;
+            this.commandID=commandID;
         }
 
         @Override
@@ -163,12 +187,13 @@ public class HomeScreen extends AppCompatActivity {
                    sentence = sentence.toUpperCase();
                    Log.e(CLASS_TAG, sentence);
                    String sentenceHash = md5(sentence);
+                   String message=commandID+sentenceHash;
                    Socket clientSocket = new Socket(ipAddress, port);
                    Log.e(CLASS_TAG, "socket inicializado");
                    DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                    BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-                   outToServer.writeBytes(sentenceHash + "\n");
+                   outToServer.writeBytes(message + "\n");
                    Log.e(CLASS_TAG, "Mensaje Enviado");
 
                    modifiedSentence = inFromServer.readLine();
@@ -280,9 +305,9 @@ public class HomeScreen extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        String commandID="T";
 
         if (requestCode == REQUEST_SPEECH_RECOGNIZER) {
             if (resultCode == RESULT_OK) {
@@ -290,7 +315,29 @@ public class HomeScreen extends AppCompatActivity {
                         (RecognizerIntent.EXTRA_RESULTS).toArray(new String[0]);
                 command = results[0];
                 serverMsg.setText("Dijiste: " +command);
-                new SendMessage(1,ipAddress,port).execute(command);
+                    if(command.toLowerCase().contains("enciende la")){
+                        command=command.replace("enciende la ","");
+                        commandID="ON";
+                    }
+                    else if(command.toLowerCase().contains("apaga la")){
+                        command=command.replace("apaga la ","");
+                        commandID="OFF";
+                    }
+                    else if(command.toLowerCase().contains("abre la")){
+                        command=command.replace("Abre la ","");
+                        command=command.replace("abre la ","");
+                        commandID="ON";
+                    }
+                    else if(command.toLowerCase().contains("cierra la")){
+                        command=command.replace("Cierra la ","");
+                        command=command.replace("cierra la ","");
+                        commandID="OFF";
+                    }
+                    else{
+                        commandID="T";
+                    }
+                    serverMsg.setText(command+commandID);
+                new SendMessage(1,ipAddress,port, commandID).execute(command);
             }
         }
     }
