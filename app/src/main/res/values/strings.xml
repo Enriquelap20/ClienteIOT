@@ -23,4 +23,5 @@
     <string name="hint_portEditText">Puerto (Default:49000)</string>
     <string name="bad_port"><![CDATA[Por favor use un puerto válido (1024<n<65535)]]></string>
     <string name="bad_prefs">Por favor chequee sus configuraciones</string>
+    <string name="security">Desactivar Seguridad</string>
 </resources>
