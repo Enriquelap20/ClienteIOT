@@ -43,6 +43,8 @@ public class HomeScreen extends AppCompatActivity {
     public Button tcpButton;
     public Button udpButton;
     public Button clearButton;
+    public Button securityCheck;
+    public boolean securityEnforced=true;
     public FloatingActionButton fab;
     public FloatingActionButton settingsButton;
     private final int REQUEST_SPEECH_RECOGNIZER = 3000;
@@ -55,6 +57,7 @@ public class HomeScreen extends AppCompatActivity {
 
         //Identificación de Views
         //Botones
+        securityCheck = findViewById(R.id.securityCheck);
         tcpButton = findViewById(R.id.tcpButton);
         udpButton = findViewById(R.id.udpButton);
         clearButton = findViewById(R.id.clearButton);
@@ -73,6 +76,22 @@ public class HomeScreen extends AppCompatActivity {
 
         ipAddress=sharedPreferences.getIpAddress();
         port=sharedPreferences.getPort();
+
+        securityCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!securityEnforced) {
+                    securityEnforced = true;
+                    Toast.makeText(getApplicationContext(), "El envío es Seguro!", Toast.LENGTH_LONG).show();
+                    securityCheck.setText("Desactivar Seguridad");
+                }
+                else{
+                    securityEnforced = false;
+                    Toast.makeText(getApplicationContext(), "La seguridad Ha sido Desactivada!", Toast.LENGTH_LONG).show();
+                    securityCheck.setText("Activar Seguridad");
+                }
+            }
+        });
 
         tcpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,14 +198,20 @@ public class HomeScreen extends AppCompatActivity {
         protected String doInBackground(String... strings) {
            if(identifier==1) {
                 try {
-                   String sentence = strings[0];
-                   sentence = Normalizer.normalize(sentence, Normalizer.Form.NFD);
-                   sentence = sentence.replaceAll("[^\\p{ASCII}]", "");
-                   sentence = sentence.trim();
-                   sentence = sentence.toUpperCase();
-                   Log.e(CLASS_TAG, sentence);
-                   String sentenceHash = md5(sentence);
-                   String message=commandID+sentenceHash;
+                    String message;
+                    String sentence = strings[0];
+                    sentence = Normalizer.normalize(sentence, Normalizer.Form.NFD);
+                    sentence = sentence.replaceAll("[^\\p{ASCII}]", "");
+                    sentence = sentence.trim();
+                    sentence = sentence.toUpperCase();
+                    Log.e(CLASS_TAG, sentence);
+                    String sentenceHash = md5(sentence);
+                        if(securityEnforced){
+                            message=commandID+sentenceHash;
+                            }
+                        else {
+                            message=commandID+sentence;
+                            }
                    Socket clientSocket = new Socket(ipAddress, port);
                    Log.e(CLASS_TAG, "socket inicializado");
                    DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
@@ -309,8 +334,7 @@ public class HomeScreen extends AppCompatActivity {
 
         if (requestCode == REQUEST_SPEECH_RECOGNIZER) {
             if (resultCode == RESULT_OK) {
-                String[] results = data.getStringArrayListExtra
-                        (RecognizerIntent.EXTRA_RESULTS).toArray(new String[0]);
+                String[] results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).toArray(new String[0]);
                 command = results[0];
                 serverMsg.setText("Dijiste: " +command);
                     if(command.toLowerCase().contains("enciende la")){
