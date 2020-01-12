@@ -86,14 +86,15 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="239dp"
-        android:layout_height="187dp"
+        android:layout_width="97dp"
+        android:layout_height="107dp"
         android:src="@drawable/logo_telecom_ucab"
         app:layout_constraintBottom_toBottomOf="@+id/include"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.161"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.931"
+        app:layout_constraintVertical_bias="0.974"
         tools:ignore="ContentDescription" />
 
     <EditText
@@ -160,12 +161,36 @@
         android:id="@+id/driveCheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Activar Modo Manejo"
+        android:text="@string/drive_mode"
         app:layout_constraintBottom_toBottomOf="@+id/include"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/securityCheck"
-        app:layout_constraintVertical_bias="0.082" />
+        app:layout_constraintVertical_bias="0.143" />
+
+    <Button
+        android:id="@+id/pedalButton"
+        android:layout_width="70dp"
+        android:layout_height="91dp"
+        android:foreground="@drawable/pedal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.636"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/driveCheck"
+        app:layout_constraintVertical_bias="0.168" />
+
+    <Button
+        android:id="@+id/reverseButton"
+        android:layout_width="72dp"
+        android:layout_height="81dp"
+        android:foreground="@drawable/images"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.392"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/driveCheck"
+        app:layout_constraintVertical_bias="0.177" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

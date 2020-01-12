@@ -1,5 +1,6 @@
 package com.example.clienteiot;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.speech.RecognizerIntent;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,7 +56,10 @@ public class HomeScreen extends AppCompatActivity implements Orientation.Listene
     public boolean driveMode=false;
     public Button driveCheck;
     public String currentState="centro";
+    public Button pedalButton;
+    public Button reverseButton;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +69,8 @@ public class HomeScreen extends AppCompatActivity implements Orientation.Listene
         //Botones
         securityCheck = findViewById(R.id.securityCheck);
         driveCheck = findViewById(R.id.driveCheck);
+        pedalButton = findViewById(R.id.pedalButton);
+        reverseButton=findViewById(R.id.reverseButton);
 
         tcpButton = findViewById(R.id.tcpButton);
         udpButton = findViewById(R.id.udpButton);
@@ -113,6 +120,54 @@ public class HomeScreen extends AppCompatActivity implements Orientation.Listene
                     Toast.makeText(getApplicationContext(), "Modo manejo Ha sido Desactivado!", Toast.LENGTH_LONG).show();
                     driveCheck.setText("Activar Modo Manejo");
                 }
+            }
+        });
+
+        pedalButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        if(driveMode){
+                            command="adelante";
+                            new SendMessage(1,ipAddress,port, "ON").execute(command);
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        // RELEASED
+                        if(driveMode){
+                            command="alto";
+                            new SendMessage(1,ipAddress,port, "T").execute(command);
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+        reverseButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        if(driveMode){
+                            command="atras";
+                            new SendMessage(1,ipAddress,port, "ON").execute(command);
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        // RELEASED
+                        if(driveMode){
+                            command="alto";
+                            new SendMessage(1,ipAddress,port, "T").execute(command);
+                        }
+                        break;
+                }
+                return false;
             }
         });
 
