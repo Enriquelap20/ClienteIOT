@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +35,10 @@ import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
 
 public class HomeScreen extends AppCompatActivity implements Orientation.Listener{
+
     public static String CLASS_TAG=HomeScreen.class.getSimpleName();
     public TextView title;
+    public ImageView logo;
     public Bundle extras;
     String username;
     public String ipAddress;
@@ -81,6 +84,7 @@ public class HomeScreen extends AppCompatActivity implements Orientation.Listene
         title = findViewById(R.id.title);
         serverMsg = findViewById(R.id.serverMsg);
         clientMsg = findViewById(R.id.clientMsg);
+        logo=findViewById(R.id.imageView);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -107,6 +111,9 @@ public class HomeScreen extends AppCompatActivity implements Orientation.Listene
             }
         });
 
+        pedalButton.setVisibility(View.GONE);
+        reverseButton.setVisibility(View.GONE);
+
         driveCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,11 +121,17 @@ public class HomeScreen extends AppCompatActivity implements Orientation.Listene
                     driveMode = true;
                     Toast.makeText(getApplicationContext(), "Modo Manejo!", Toast.LENGTH_LONG).show();
                     driveCheck.setText("Desactivar Modo Manejo");
+                    pedalButton.setVisibility(View.VISIBLE);
+                    reverseButton.setVisibility(View.VISIBLE);
+                    logo.setVisibility(View.GONE);
                 }
                 else{
                     driveMode = false;
                     Toast.makeText(getApplicationContext(), "Modo manejo Ha sido Desactivado!", Toast.LENGTH_LONG).show();
                     driveCheck.setText("Activar Modo Manejo");
+                    pedalButton.setVisibility(View.GONE);
+                    reverseButton.setVisibility(View.GONE);
+                    logo.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -444,18 +457,6 @@ public class HomeScreen extends AppCompatActivity implements Orientation.Listene
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mOrientation.startListening(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mOrientation.stopListening();
-    }
-
-    @Override
     public void onOrientationChanged(float roll) {
         float izq=20;
         float der=-20;
@@ -483,6 +484,18 @@ public class HomeScreen extends AppCompatActivity implements Orientation.Listene
             }
             Log.e(CLASS_TAG, String.valueOf(roll));
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mOrientation.startListening(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mOrientation.stopListening();
     }
 
 }

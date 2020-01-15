@@ -8,28 +8,25 @@ import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.Surface;
 import android.view.WindowManager;
-import androidx.annotation.Nullable;
 
 public class Orientation implements SensorEventListener {
-    public interface Listener {
-        void onOrientationChanged(float roll);
-    }
 
-    private static final int SENSOR_DELAY_MICROS = 2 * 1000000; // 1s
+    private static final int SENSOR_DELAY_MICROS = 2 * 1000000; // 2s
     private final WindowManager mWindowManager;
     private final SensorManager mSensorManager;
     private int mLastAccuracy;
     private Listener mListener;
     public static String CLASS_TAG=Orientation.class.getSimpleName();
-
-    @Nullable
     private final Sensor mRotationSensor;
+
+    public interface Listener {
+        void onOrientationChanged(float roll);
+    }
 
     public Orientation(Activity activity) {
         mWindowManager = activity.getWindow().getWindowManager();
-        mSensorManager = (SensorManager) activity.getSystemService(Activity.SENSOR_SERVICE);
 
-        // Can be null if the sensor hardware is not available
+        mSensorManager = (SensorManager) activity.getSystemService(Activity.SENSOR_SERVICE);
         mRotationSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
     }
 
@@ -39,7 +36,7 @@ public class Orientation implements SensorEventListener {
         }
         mListener = listener;
         if (mRotationSensor == null) {
-            Log.e(CLASS_TAG,"Rotation vector sensor not available; will not provide orientation data.");
+            Log.e(CLASS_TAG,"Sensor de rotación no disponible.");
             return;
         }
         mSensorManager.registerListener(this, mRotationSensor, SENSOR_DELAY_MICROS);
@@ -72,14 +69,14 @@ public class Orientation implements SensorEventListener {
 
     @SuppressWarnings("SuspiciousNameCombination")
     private void updateOrientation(float[] rotationVector) {
+        //Se crea una matriz de rotación a partr de los resultados del sensor (rotationVector)
         float[] rotationMatrix = new float[9];
         SensorManager.getRotationMatrixFromVector(rotationMatrix, rotationVector);
 
         final int worldAxisForDeviceAxisX;
         final int worldAxisForDeviceAxisY;
 
-        // Remap the axes as if the device screen was the instrument panel,
-        // and adjust the rotation matrix for the device orientation.
+        // Ajusta la matriz de rotación de acuerdo a la orientación del telefono
         switch (mWindowManager.getDefaultDisplay().getRotation()) {
             case Surface.ROTATION_0:
             default:
@@ -103,12 +100,11 @@ public class Orientation implements SensorEventListener {
         float[] adjustedRotationMatrix = new float[9];
         SensorManager.remapCoordinateSystem(rotationMatrix, worldAxisForDeviceAxisX, worldAxisForDeviceAxisY, adjustedRotationMatrix);
 
-        // Transform rotation matrix into azimuth/pitch/roll
+        // Transforma la matriz de rotacion azimuth/pitch/roll (Z/X/Y)
         float[] orientation = new float[3];
         SensorManager.getOrientation(adjustedRotationMatrix, orientation);
 
-        // Convert radians to degrees
-        float pitch = orientation[1] * -57;
+        // Convierte radianes a grados 180/pi~57
         float roll = orientation[2] * -57;
 
         mListener.onOrientationChanged(roll);
