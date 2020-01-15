@@ -24,4 +24,6 @@
     <string name="bad_port"><![CDATA[Por favor use un puerto válido (1024<n<65535)]]></string>
     <string name="bad_prefs">Por favor chequee sus configuraciones</string>
     <string name="security">Desactivar Seguridad</string>
+    <string name="drive_mode">Activar Modo Manejo</string>
+    <string name="pedal">Acelerador</string>
 </resources>
